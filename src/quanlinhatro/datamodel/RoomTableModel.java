@@ -6,6 +6,7 @@
 package quanlinhatro.datamodel;
 
 import java.util.List;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 import quanlinhatro.entity.Room;
 
@@ -97,12 +98,12 @@ public class RoomTableModel extends AbstractTableModel {
 
     public void setRooms(List<Room> rooms) {
         this.rooms = rooms;
+        this.fireTableDataChanged();
     }
 
     @Override
     public String getColumnName(int column) {
         return HEADER[column];
     }
-
     
 }

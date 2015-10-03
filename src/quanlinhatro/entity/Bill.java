@@ -5,6 +5,7 @@
  */
 package quanlinhatro.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -12,7 +13,7 @@ import java.util.Scanner;
  *
  * @author SâuBéNhỏ
  */
-public class Bill {
+public class Bill implements Serializable{
     
     private Date date;
     private int numberElectricity;

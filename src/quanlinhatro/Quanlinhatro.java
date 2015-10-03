@@ -12,6 +12,8 @@ package quanlinhatro;
 public class Quanlinhatro {
 
     public static void main(String[] args) {
+        
+        DataManager.getInstance().loadData();
         Management manager = new Management();
         manager.setVisible(true);
         manager.pack();

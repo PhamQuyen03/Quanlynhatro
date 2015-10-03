@@ -5,11 +5,13 @@
  */
 package quanlinhatro.entity;
 
+import java.io.Serializable;
+
 /**
  *
  * @author SâuBéNhỏ
  */
-public class Room {
+public class Room implements Serializable{
 
     public static int priceElectricity = 4000;
     public static int priceWater = 25000;

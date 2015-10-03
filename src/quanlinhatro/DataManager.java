@@ -5,8 +5,17 @@
  */
 package quanlinhatro;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Vector;
-import quanlinhatro.entity.Lodger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import quanlinhatro.entity.Bill;
 import quanlinhatro.entity.Room;
 
 /**
@@ -16,7 +25,6 @@ import quanlinhatro.entity.Room;
 public class DataManager {
 
     Vector<Room> listRoom;
-    Vector<Lodger> listLodger;
 
     private static DataManager instance = new DataManager();
 
@@ -26,14 +34,43 @@ public class DataManager {
 
     private DataManager() {
         listRoom = new Vector<>();
-        listLodger = new Vector<>();
+    }
+    
+    public void loadData() {
         
-        Room rooms = new Room("305", false, 587, 5867, 572);
-        Room rooms1 = new Room("303", true, 345, 324, 25);
-        Room rooms2 = new Room("307", false, 7854, 25, 74);
-        listRoom.add(rooms);
-        listRoom.add(rooms1);
-        listRoom.add(rooms2);
+        try {
+            File file = new File("quanlinhatro.txt");
+            if(!file.exists()) {
+                file.createNewFile();
+                return;
+            }
+            FileInputStream fileInput = new FileInputStream(file);
+            ObjectInputStream objIn = new ObjectInputStream(fileInput);
+            listRoom = (Vector<Room>) objIn.readObject();
+            
+            objIn.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DataManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DataManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(DataManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    public void saveData() {
+        
+        try {
+            FileOutputStream fileOutput = new FileOutputStream("quanlinhatro.txt");
+            ObjectOutputStream objout = new ObjectOutputStream(fileOutput);
+            objout.writeObject(listRoom);
+            objout.flush();
+            objout.close();
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(DataManager.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(DataManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     
@@ -54,13 +91,10 @@ public class DataManager {
     public void setListRoom(Vector<Room> listRoom) {
         this.listRoom = listRoom;
     }
-
-    public Vector<Lodger> getListLodger() {
-        return listLodger;
+    
+    public void deleteRoom(String roomcode) {
+        listRoom.remove(getRoom(roomcode));
     }
 
-    public void setListLodger(Vector<Lodger> listLodger) {
-        this.listLodger = listLodger;
-    }
-
+    
 }

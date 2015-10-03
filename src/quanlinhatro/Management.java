@@ -5,13 +5,9 @@
  */
 package quanlinhatro;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import quanlinhatro.datamodel.RoomTableModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import quanlinhatro.entity.Bill;
 import quanlinhatro.entity.Room;
 
@@ -32,23 +28,7 @@ public class Management extends javax.swing.JFrame {
         tbRoomModel = new RoomTableModel();
         tbRoomModel.setRooms(DataManager.getInstance().getListRoom());
         tbListRoom.setModel(tbRoomModel);
-        tabbedPanel.addChangeListener(new ChangeListener() {
 
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                if (tabbedPanel.getSelectedIndex() == 1) {
-                    if (listRoomModel == null) {
-                        listRoomModel = new DefaultComboBoxModel<>(DataManager.getInstance().getListRoom());
-                    }
-
-                    if (cbListRoom == null) {
-                        cbListRoom = new JComboBox((ComboBoxModel) listRoomModel);
-                    }
-                    cbListRoom.setModel(listRoomModel);
-                }
-            }
-
-        });
     }
 
     /**
@@ -77,8 +57,6 @@ public class Management extends javax.swing.JFrame {
         TxtPriceInternet = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         btPay = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
-        cbListRoom = new javax.swing.JComboBox();
         jPanel3 = new javax.swing.JPanel();
         lbRoomCode = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
@@ -115,6 +93,11 @@ public class Management extends javax.swing.JFrame {
         lbSumWater = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         tbListRoom.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -255,7 +238,7 @@ public class Management extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btDelete))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE))))
-                .addContainerGap(180, Short.MAX_VALUE))
+                .addContainerGap(166, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -272,36 +255,10 @@ public class Management extends javax.swing.JFrame {
                     .addComponent(btPay))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(167, Short.MAX_VALUE))
+                .addContainerGap(157, Short.MAX_VALUE))
         );
 
         tabbedPanel.addTab("Room", jPanel1);
-
-        cbListRoom.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cbListRoom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbListRoomActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
-                .addComponent(cbListRoom, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(632, Short.MAX_VALUE))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(35, 35, 35)
-                .addComponent(cbListRoom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(544, Short.MAX_VALUE))
-        );
-
-        tabbedPanel.addTab("People", jPanel2);
 
         lbRoomCode.setText("Ma phong");
 
@@ -528,7 +485,7 @@ public class Management extends javax.swing.JFrame {
                             .addComponent(lbPriceRoom, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtNamePay, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lbPriceInternet, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 29, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -552,7 +509,7 @@ public class Management extends javax.swing.JFrame {
                     .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabbedPanel.addTab("Bill", jPanel3);
@@ -583,8 +540,11 @@ public class Management extends javax.swing.JFrame {
         if (num == -1) {
             JOptionPane.showMessageDialog(this, "you must select a row");
         } else {
-            
+            String roomCode = (String) tbListRoom.getValueAt(num, 0);
+            DataManager.getInstance().deleteRoom(roomCode);
         }
+        
+        tbRoomModel.setRooms(DataManager.getInstance().listRoom);
     }//GEN-LAST:event_btDeleteActionPerformed
 
     private void btEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditActionPerformed
@@ -617,7 +577,7 @@ public class Management extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "you must select a row");
         } else {
             String codeRoom = (String) tbListRoom.getValueAt(num, 0);
-            tabbedPanel.setSelectedIndex(2);
+            tabbedPanel.setSelectedIndex(1);
             Room room = new Room();
             room = DataManager.getInstance().getRoom(codeRoom);
             Bill bill = new Bill();
@@ -639,6 +599,7 @@ public class Management extends javax.swing.JFrame {
             lbMoneyWater.setText("0");
             float sum = bill.calculate();
             lbSumMoney.setText(String.valueOf(sum));
+            
         }
         
     }//GEN-LAST:event_btPayActionPerformed
@@ -661,51 +622,57 @@ public class Management extends javax.swing.JFrame {
         lbMoneyElec.setText(String.valueOf(moneyElec));
         lbMoneyWater.setText(String.valueOf(moneyWater));
         lbSumMoney.setText(String.valueOf(sum));
+        room.setNumberElectricity(Integer.parseInt(txtNumberElecLast.getText()));
+        room.setNumberWater(Integer.parseInt(txtNumberWaterLast.getText()));
+        
+        JOptionPane.showMessageDialog(this, "tong so tien can dong :" + "\n" + lbSumMoney.getText());
+        
     }//GEN-LAST:event_btCalculateActionPerformed
 
     private void txtNamePayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNamePayActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNamePayActionPerformed
 
-    private void cbListRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbListRoomActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbListRoomActionPerformed
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        
+        DataManager.getInstance().saveData();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Management.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Management.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Management.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Management.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Management().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String args[]) {
+//        /* Set the Nimbus look and feel */
+//        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+//        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+//         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+//         */
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Nimbus".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(Management.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(Management.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(Management.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(Management.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+//        //</editor-fold>
+//        //</editor-fold>
+//
+//        /* Create and display the form */
+//        java.awt.EventQueue.invokeLater(new Runnable() {
+//            public void run() {
+//                new Management().setVisible(true);
+//            }
+//        });
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField TxtPriceInternet;
@@ -714,7 +681,6 @@ public class Management extends javax.swing.JFrame {
     private javax.swing.JButton btDelete;
     private javax.swing.JButton btEdit;
     private javax.swing.JButton btPay;
-    private javax.swing.JComboBox cbListRoom;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -735,7 +701,6 @@ public class Management extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
